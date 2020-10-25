@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue Notebook</title>
+    <!--====== Material Design Icons CSS ======-->
+    <link rel="stylesheet" href="css/materialdesignicons.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/vue.js"></script>
+    <style>
+      .main-container {
+        height: 100vh;
+        display: grid;
+        grid-template-columns: 16rem 1fr;
+      }
+      .reviews-rating-bar {
+        display: flex;
+        align-items: center;
+        padding-top: 0.5rem;
+      }
+      .reviews-rating-bar span {
+        margin-left: auto;
+        margin-right: 0.5rem;
+      }
+
+      .side-bar {
+        grid-column: 1/2;
+        border-right: 2px solid #efefef;
+      }
+      .main {
+        grid-column: 2/-1;
+        height: 100vh;
+        display: grid;
+        grid-template-rows: 1fr 4rem;
+      }
+      .main .reviews-rating-wrapper {
+        grid-row: 1/2;
+      }
+      .main .note-info {
+        grid-row: 2/-1;
+        padding-left: 2rem;
+        padding-top: 1rem;
+      }
+      .active {
+        background-color: #542ded;
+        color: #fff;
+        padding: 0.2rem;
+        font-weight: bold;
+        border-radius: 2px;
+        margin-left: -0.2rem;
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
+      }
+      .form-input span {
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Notebook app -->
+    <div id="notebook">
+      <!-- Main pane -->
+      <div class="main-container">
+        <div class="side-bar">
+          <section class="reviews-wrapper pt-100 pb-100">
+            <div class="container">
+              <div class="reviews-style">
+                <div class="reviews-title">
+                  <button class="main-btn primary-btn" @click="addNote">
+                    Add a note
+                  </button>
+                </div>
+
+                <div class="reviews-rating-star">
+                  <div
+                    class="reviews-rating-bar"
+                    v-for="note of sortedNotes"
+                    @click="selectNote(note)"
+                    :class="{ active: note === selectedNote }"
+                    style="cursor: pointer"
+                  >
+                    {{note.title}}
+                    <span class="icon-text text-style-1" v-if="note.favorite"
+                      ><i class="mdi mdi-star"></i>
+                      <!-- <i class="mdi mdi-star-outline" v-else></i> -->
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="reviews-style main" v-if="selectedNote">
+          <div class="reviews-rating-wrapper flex-wrap">
+            <div class="reviews-rating-form">
+              <div class="rating-star">
+                <div class="form-input">
+                  <input
+                    type="text"
+                    v-model="selectedNote.title"
+                    placeholder="Note title"
+                  />
+                  <span
+                    class="main-btn primary-btn"
+                    @click="removeNote"
+                    title="Remove note"
+                    ><i class="mdi mdi-delete"></i
+                  ></span>
+                  <span
+                    class="main-btn primary-btn"
+                    @click="favoriteNote"
+                    title="Favorite note"
+                    ><i class="mdi mdi-star"></i
+                  ></span>
+                </div>
+              </div>
+              <div class="rating-form">
+                <div class="single-form form-default">
+                  <label>Write your Note in Markdown</label>
+                  <div class="form-input">
+                    <textarea
+                      placeholder="Your Note in Markdown"
+                      v-model="selectedNote.content"
+                    ></textarea>
+                    <i class="mdi mdi-message-text-outline"></i>
+                  </div>
+                </div>
+                <div class="single-rating-form flex-wrap"></div>
+              </div>
+            </div>
+
+            <div class="reviews-rating-star">
+              <p class="rating-review" v-html="notePreview"></p>
+            </div>
+          </div>
+          <div class="note-info">
+            <p>
+              <span class="label text-muted">Created</span>
+              <span class="value text">{{ selectedNote.created | date}}</span>
+              <span class="label text-muted">Lines</span>
+              <span class="value text">{{ linesCount }}</span>
+              <span class="label text-muted">Words</span>
+              <span class="value text">{{ wordsCount }}</span>
+              <span class="label text-muted">Characters</span>
+              <span class="value text">{{ charactersCount }}</span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/popper.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/marked.js"></script>
+    <script src="js/moment.min.js"></script>
+    <script src="js/script.js"></script>
+  </body>
+</html>
